@@ -9,9 +9,9 @@ export class SequentialModel {
     private databaseService: DatabaseService;
 
     constructor(
-        @inject(TYPES.DatabaseService) databaseService: DatabaseService,
-        name: string,
-        value: number
+        @inject(DatabaseService) databaseService: DatabaseService,
+        @inject(TYPES.String) name: string, // Passed by factory
+        @inject(TYPES.String) value: number // Passed by factory
     ) {
         this.databaseService = databaseService;
         this.name = name;

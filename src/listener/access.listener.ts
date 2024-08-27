@@ -8,8 +8,8 @@ export class AccessListener {
     private urlModel: UrlModel;
 
     constructor(
-        @inject(TYPES.UrlModel) urlModel: UrlModel,
-        @inject(TYPES.AccessEvent) accessEvent: AccessEvent
+        @inject(UrlModel) urlModel: UrlModel,
+        @inject(AccessEvent) accessEvent: AccessEvent
     ) {
         this.urlModel = urlModel;
         accessEvent.onEvent(this.subscribe.bind(this));

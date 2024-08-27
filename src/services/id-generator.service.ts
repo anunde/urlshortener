@@ -9,7 +9,7 @@ export class IdGeneratorService {
     private sequentialCounter: number = 0;
     private sequential: SequentialModel;
 
-    constructor(@inject(TYPES.SequentialModel) sequential: SequentialModel) {
+    constructor(@inject(SequentialModel) sequential: SequentialModel) {
         this.sequential = sequential;
     }
 
