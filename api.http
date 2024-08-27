@@ -1,0 +1,13 @@
+### Recuperar los shor URL
+GET http://localhost:3000
+
+### Recuperar un shor URL
+GET http://localhost:3000/2Sd1qW34vA
+
+### Crear un shorURL
+POST http://localhost:3000 
+Content-Type: application/json
+
+{
+    "longUrl": "https://www.linkedin.com/in/anundeweb/"
+}
