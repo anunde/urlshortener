@@ -26,6 +26,9 @@ export class DatabaseService {
     }
 
     public async connectDB() {
+        if (this.db) {
+            return this.db;
+        }
         try {
             await client.connect();
             this.db = client.db(dbName);

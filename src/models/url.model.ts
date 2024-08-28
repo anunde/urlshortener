@@ -12,27 +12,26 @@ export interface IUrlModel {
 
 @injectable()
 export class UrlModel {
-    id: string;
-    longUrl: string;
-    shortUrl: string;
-    createdAt: Date;
-    accessCount: number;
+    id!: string;
+    longUrl!: string;
+    shortUrl!: string;
+    createdAt!: Date;
+    accessCount!: number;
 
     constructor(
-        @inject(TYPES.DatabaseService) private databaseService: DatabaseService,
-        id: string,
-        longUrl: string
+        @inject(DatabaseService) private databaseService: DatabaseService,
     ) {
+    }
+
+    async save(id: string, longUrl: string): Promise<UrlModel> {
         this.id = id;
         this.longUrl = longUrl;
         this.shortUrl = this.encodeBase62(this.id);
         this.createdAt = new Date();
         this.accessCount = 0;
-    }
-
-    async save(): Promise<void> {
         const db = this.databaseService.getDB();
         await db.collection<IUrlModel>('urls').insertOne(this.toDocument());
+        return this;
     }
 
     async getByShortUrl(

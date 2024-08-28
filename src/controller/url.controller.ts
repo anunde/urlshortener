@@ -10,15 +10,15 @@ import { TYPES } from "../types";
 @injectable()
 export class UrlController {
     private idGeneratorService: IdGeneratorService;
-    urlModel: UrlModel;
+    private urlModel: UrlModel;
     private accessEvent: AccessEvent;
     private accessListener: AccessListener;
 
     constructor(
-        @inject(TYPES.IdGeneratorService) idGeneratorService: IdGeneratorService,
-        @inject(TYPES.UrlModel) urlModel: UrlModel,
-        @inject(TYPES.AccessEvent) accessEvent: AccessEvent,
-        @inject(TYPES.AccessListener) accessListener: AccessListener
+        @inject(IdGeneratorService) idGeneratorService: IdGeneratorService,
+        @inject(UrlModel) urlModel: UrlModel,
+        @inject(AccessEvent) accessEvent: AccessEvent,
+        @inject(AccessListener) accessListener: AccessListener
     ) {
         this.idGeneratorService = idGeneratorService;
         this.urlModel = urlModel;
@@ -32,9 +32,8 @@ export class UrlController {
             const { longUrl } = await c.req.json();
 
             const id = await this.idGeneratorService.generateId();
-            const url = this.urlModel.create(id, longUrl);
 
-            await url.save();
+            const url = await this.urlModel.save(id, longUrl);
 
             return c.json({ shortUrl: `${process.env.BASE_URL}/${url.shortUrl}` });
 
@@ -44,10 +43,11 @@ export class UrlController {
     }
 
     async getLongUrl(c: Context): Promise<Response> {
+
         try {
             const shortUrl = c.req.param('shortUrl');
             
-            const url = await this.urlModel.create('', '').getByShortUrl(shortUrl);
+            const url = await this.urlModel.getByShortUrl(shortUrl);
 
             if (url === null) {
                 throw new HTTPException(404, { message: 'URL not found' });
