@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 
-import { UrlController } from "../controller/url.controller";
+import { UrlController } from "../controller/url-controller/url.controller";
 import { container } from "../config/inversify.config";
 
 export class Router {

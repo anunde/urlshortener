@@ -3,7 +3,7 @@ import { DatabaseService } from "./database";
 import { SequentialModel } from "../models/sequential.model";
 import { UrlModel } from "../models/url.model";
 import { AccessListener } from "../listener/access.listener";
-import { UrlController } from "../controller/url.controller";
+import { UrlController } from "../controller/url-controller/url.controller";
 import { IdGeneratorService } from "../services/id-generator.service";
 import { TYPES } from "../types";
 import { AccessEvent } from "../event/access.event";

@@ -1,6 +1,5 @@
 import { inject, injectable } from "inversify";
 import { DatabaseService } from "../config/database";
-import { TYPES } from "../types";
 
 export interface IUrlModel {
     id: string;
