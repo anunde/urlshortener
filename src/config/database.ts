@@ -1,49 +1,40 @@
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { Db, Document, MongoClient } from "mongodb";
-import dotenv from "dotenv";
-
-dotenv.config();
-
-const uri = process.env.MONGODB_URL as string;
-const dbName = process.env.DB_NAME as string;
-
-if (!uri) {
-    throw new Error("Falta la variable de entorno MONGODB_URI");
-}
-
-if (!dbName) {
-    throw new Error("Falta la variable de entorno DB_NAME");
-}
-
-const client = new MongoClient(uri);
+import { TYPES } from "../types";
 
 @injectable()
 export class DatabaseService {
-    private db!: Db;
+  private db!: Db;
+  private client: MongoClient;
+  //   uri = process.env.MONGODB_URL as string; Santi: Esta propiedad ya no hace falta porque ya viene de la instancia de MongoClient
+  dbName = process.env.DB_NAME as string;
 
-    constructor() {
-        this.connectDB();
-    }
+  // Santi: Inyección de dependencia de MongoClient
+  constructor(@inject(TYPES.MongoClient) mongoClient: MongoClient) {
+    this.client = mongoClient;
+    this.connectDB();
+    this.db = this.client.db(this.dbName);
+  }
 
-    public async connectDB() {
-        if (this.db) {
-            return this.db;
-        }
-        try {
-            await client.connect();
-            this.db = client.db(dbName);
-            console.log("Connected to MongoDB");
-        } catch (error) {
-            console.error("Error connecting to MongoDB:", error);
-            process.exit(1);
-        }
+  public async connectDB() {
+    if (this.db) {
+      return this.db;
     }
+    try {
+      await this.client.connect();
+      this.db = this.client.db(this.dbName);
+      console.log("Connected to MongoDB");
+    } catch (error) {
+      console.error("Error connecting to MongoDB:", error);
+      process.exit(1);
+    }
+  }
 
-    public getDB(): Db {
-        return this.db;
-    }
+  public getDB(): Db {
+    return this.db;
+  }
 
-    public async getCollection<T extends Document>(name: string): Promise<any> {
-        return this.db.collection<T>(name);
-    }
+  public async getCollection<T extends Document>(name: string): Promise<any> {
+    return this.db.collection<T>(name);
+  }
 }
