@@ -7,11 +7,27 @@ import { UrlController } from "../controller/url-controller/url.controller";
 import { IdGeneratorService } from "../services/id-generator.service";
 import { TYPES } from "../types";
 import { AccessEvent } from "../event/access.event";
+import { MongoClient } from "mongodb";
+
+// Santi: Se importa dotenv para cargar las variables de entorno aquí y no en el módulo de la DB
+import dotenv from "dotenv";
+dotenv.config();
+
+const dbUrl = process.env.MONGODB_URL;
 
 const container = new inversify.Container();
 container.bind<string>(TYPES.String).toDynamicValue((value) => {
   return "string";
 });
+
+container
+  .bind<MongoClient>(TYPES.MongoClient)
+  .toDynamicValue(() => {
+    // Santi: Se inyecta la instancia de MongoClient en el contenedor como singleton
+    const client = new MongoClient(dbUrl!);
+    return client;
+  })
+  .inSingletonScope();
 
 container.bind<string>(TYPES.EventName).toConstantValue("urlAccessed"); // Santi: Se agrega el binding de EventName al valor constante "urlAccessed"
 container.bind<DatabaseService>(DatabaseService).to(DatabaseService);
